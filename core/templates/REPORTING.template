@@ -1,21 +1,162 @@
-<<REPLACE ALL UPPERCASE EXPRESSIONS AND DELETE THIS LINE, `C-c C-c` TO SUBMIT>>
 #### Description :octocat:
-<<DESCRIPTION OF THE PROBLEM>>
+YCMD can't complete at all
 
 #### Reproduction guide :beetle:
 - Start Emacs
-- <<REPRODUCTION STEPS>>
+- mkdir a new dir for test, and type a .ycm_extra_flags file for ycmd
+- reopen the emacs
+- open a new c file, type #include <st
+- then the problem occur
 
 *Observed behaviour:* :eyes: :broken_heart:
-<<DESCRIPTION OF THE OBSERVED BEHAVIOUR>>
+ycmd can't complete the include file stdio and an error occur: 
+                    -----RuntimeError: No completions found; errors in the file?
+If i use the ycmd/examples/.ycm_extra_conf.py and set the's ycmd-gloabl-config value,it can works.
+but i want add a include file and it can't works.  
+
 
 *Expected behaviour:* :heart: :smile:
-<<DESCRIPTION OF THE EXPECTED BEHAVIOUR>>
+YCMD can complete normal
+
 
 (%LAST_KEYS%)
 %SYSTEM_INFO%
+- OS: ubuntu 16.04
+- Emacs: 24.5.1
+- Spacemacs: 0.200.7
+- Spacemacs branch: master (rev. c2774bc)
+- Graphic display: t
+- Distribution: spacemacs
+- Editing style: vim
+- Completion: helm
+- Layers:
+```elisp
+(helm
+ (auto-completion :variables auto-completion-return-key-behavior 'complete auto-completion-tab-key-behavior 'cycle auto-completion-complete-with-key-sequence nil auto-completion-complete-with-key-sequence-delay 0.1 auto-completion-private-snippets-directory nil)
+ emacs-lisp git
+ (shell :variables shell-default-height 30 shell-default-position 'bottom)
+ semantic ycmd
+ (gtags :variables gtags-enable-by-default t)
+ (c-c++ :variables c-c++-enable-clang-support t c-c++-default-mode-for-headers 'c++-mode))
+```
+
 
 #### Backtrace :paw_prints:
 ```
-%BACKTRACE%
+my .ycm_extra_flags file is like this:
+'-isystem',
+'/usr/include',
+'-isystem',
+'/usr/local/include',
+
+the ycmd-server:
+2017-03-29 15:13:51,972 - DEBUG - Global extra conf not loaded or no function YcmCorePreload
+serving on http://127.0.0.1:34589
+2017-03-29 15:13:52,769 - INFO - Received event notification
+2017-03-29 15:13:52,769 - DEBUG - Event name: BufferVisit
+2017-03-29 15:13:52,786 - INFO - Received event notification
+2017-03-29 15:13:52,786 - DEBUG - Event name: FileReadyToParse
+2017-03-29 15:13:52,787 - INFO - Adding buffer identifiers for file: /home/jerry/work/c_code/a.c
+2017-03-29 15:13:52,787 - INFO - /home/jerry/.emacs.d/layers/+tools/ycmd/global_conf.py: Getting flags for /home/jerry/work/c_code/a.c
+2017-03-29 15:13:52,787 - INFO - a.c: Could not get compilation flags from db: could not find compile_commands.json
+2017-03-29 15:13:52,787 - INFO - a.c: Found nearest .ycm_extra_flags at /home/jerry/work/c_code/.ycm_extra_flags
+2017-03-29 15:13:52,787 - INFO - a.c: Extra flags = [
+		'-isystem',
+		'/usr/include',
+		'-isystem',
+		'/usr/local/include',
+		'-I',
+		'/home/jerry/work/oled_raypai/kernel/include'
+]
+2017-03-29 15:13:52,787 - INFO - a.c: Flags = [
+		'-isystem',
+		'/usr/include',
+		'-isystem',
+		'/usr/local/include',
+		'-I',
+		'/home/jerry/work/oled_raypai/kernel/include'
+]
+2017-03-29 15:14:00,646 - INFO - Received completion request
+2017-03-29 15:14:00,647 - DEBUG - Using filetype completion: True
+Traceback (most recent call last):
+  File "/home/jerry/bin/ycmd/third_party/bottle/bottle.py", line 861, in _handle
+    return route.call(**args)
+  File "/home/jerry/bin/ycmd/third_party/bottle/bottle.py", line 1734, in wrapper
+    rv = callback(*a, **ka)
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/watchdog_plugin.py", line 108, in wrapper
+    return callback( *args, **kwargs )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/hmac_plugin.py", line 70, in wrapper
+    body = callback( *args, **kwargs )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/handlers.py", line 103, in GetCompletions
+    .ComputeCandidates( request_data ) )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/completer.py", line 217, in ComputeCandidates
+    candidates = self._GetCandidatesFromSubclass( request_data )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/completer.py", line 233, in _GetCandidatesFromSubclass
+    raw_completions = self.ComputeCandidatesInner( request_data )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/cpp/clang_completer.py", line 113, in ComputeCandidatesInner
+    raise RuntimeError( NO_COMPLETIONS_MESSAGE )
+RuntimeError: No completions found; errors in the file?
+2017-03-29 15:14:05,174 - INFO - Received completion request
+2017-03-29 15:14:05,174 - DEBUG - Using filetype completion: True
+Traceback (most recent call last):
+  File "/home/jerry/bin/ycmd/third_party/bottle/bottle.py", line 861, in _handle
+    return route.call(**args)
+  File "/home/jerry/bin/ycmd/third_party/bottle/bottle.py", line 1734, in wrapper
+    rv = callback(*a, **ka)
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/watchdog_plugin.py", line 108, in wrapper
+    return callback( *args, **kwargs )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/hmac_plugin.py", line 70, in wrapper
+    body = callback( *args, **kwargs )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/handlers.py", line 103, in GetCompletions
+    .ComputeCandidates( request_data ) )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/completer.py", line 217, in ComputeCandidates
+    candidates = self._GetCandidatesFromSubclass( request_data )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/completer.py", line 233, in _GetCandidatesFromSubclass
+    raw_completions = self.ComputeCandidatesInner( request_data )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/cpp/clang_completer.py", line 113, in ComputeCandidatesInner
+    raise RuntimeError( NO_COMPLETIONS_MESSAGE )
+RuntimeError: No completions found; errors in the file?
+2017-03-29 15:14:06,127 - INFO - Received completion request
+2017-03-29 15:14:06,127 - DEBUG - Using filetype completion: True
+Traceback (most recent call last):
+  File "/home/jerry/bin/ycmd/third_party/bottle/bottle.py", line 861, in _handle
+    return route.call(**args)
+  File "/home/jerry/bin/ycmd/third_party/bottle/bottle.py", line 1734, in wrapper
+    rv = callback(*a, **ka)
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/watchdog_plugin.py", line 108, in wrapper
+    return callback( *args, **kwargs )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/hmac_plugin.py", line 70, in wrapper
+    body = callback( *args, **kwargs )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/handlers.py", line 103, in GetCompletions
+    .ComputeCandidates( request_data ) )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/completer.py", line 217, in ComputeCandidates
+    candidates = self._GetCandidatesFromSubclass( request_data )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/completer.py", line 233, in _GetCandidatesFromSubclass
+    raw_completions = self.ComputeCandidatesInner( request_data )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/cpp/clang_completer.py", line 113, in ComputeCandidatesInner
+    raise RuntimeError( NO_COMPLETIONS_MESSAGE )
+RuntimeError: No completions found; errors in the file?
+2017-03-29 15:14:07,303 - INFO - Received completion request
+2017-03-29 15:14:07,303 - DEBUG - Using filetype completion: True
+Traceback (most recent call last):
+  File "/home/jerry/bin/ycmd/third_party/bottle/bottle.py", line 861, in _handle
+    return route.call(**args)
+  File "/home/jerry/bin/ycmd/third_party/bottle/bottle.py", line 1734, in wrapper
+    rv = callback(*a, **ka)
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/watchdog_plugin.py", line 108, in wrapper
+    return callback( *args, **kwargs )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/hmac_plugin.py", line 70, in wrapper
+    body = callback( *args, **kwargs )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/handlers.py", line 103, in GetCompletions
+    .ComputeCandidates( request_data ) )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/completer.py", line 217, in ComputeCandidates
+    candidates = self._GetCandidatesFromSubclass( request_data )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/completer.py", line 233, in _GetCandidatesFromSubclass
+    raw_completions = self.ComputeCandidatesInner( request_data )
+  File "/home/jerry/bin/ycmd/ycmd/../ycmd/completers/cpp/clang_completer.py", line 113, in ComputeCandidatesInner
+    raise RuntimeError( NO_COMPLETIONS_MESSAGE )
+RuntimeError: No completions found; errors in the file?
+2017-03-29 15:23:51,905 - INFO - Received health request
+2017-03-29 15:23:51,991 - DEBUG - Keeping subservers alive
+
 ```
